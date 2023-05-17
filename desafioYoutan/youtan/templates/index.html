@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <h1>Bem-vindo ao meu projeto Django!</h1>
+  <button id="myButton" class="btn btn-primary">Clique aqui</button>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('#myButton').click(function() {
+      alert('Botão clicado!');
+    });
+  });
+</script>
+{% endblock %}
