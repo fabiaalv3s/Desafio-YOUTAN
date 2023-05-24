@@ -3,7 +3,7 @@
 <p>
 Criar a aplicação das telas com Python, utilizando Django com MVT. Deve-se utilizar
 Bootstrap para o CSS das telas. Como banco de dados, pode-se utilizar qualquer um
-a seu critério. Como interação JS nas telas, desejável utilizar JQuery ou JS puro.
+a seu critério. Com interação JS nas telas, desejável utilizar JQuery ou JS puro.
 </p>
 
 <h2> Executando </h2>
