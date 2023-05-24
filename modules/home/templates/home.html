@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" integrity="sha256-FdatTf20PQr/rWg+cAKfl6j4/IY3oohFAJ7gVC3M34E=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css"> <!-- for live demo page -->
+{% endblock %}
+
+  {% block content %}
+
+  <div class="container">
+    {% include 'includes/new-company.html' %}
+      <div class="row mt-5 mb-3">
+          <div class="col-12 d-flex justify-content-end">
+            <button class="btn btn-primary btn-lg btn-newcompany" type="button">
+                Novo
+            </button>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-12 rounded shadow ">
+              <div class="container" id="companys">
+                {% for client in object_list %}
+                    <div class="row border-bottom pt-3">
+                        <div class="col-9">
+                            <p class="p-0">{{client.company_name}}</p>
+                        </div>
+                        <div class="col-1">
+                            <div class="text-center text-light rounded-pill {% if client.active == True %} bg-success {% else %} bg-secondary {% endif %}">
+                                {% if client.active == True %}
+                                    Ativo
+                                {% else %}
+                                    Inativo
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-2 d-flex justify-content-end pb-2">
+                            <a href='{% url "home:update-client" pk=client.id %}' type="button" class="btn btn-round-blue"><img src="{% static 'front/images/edit.svg' %}" width="24px" height="24px"/>Editar</a>
+                        </div>
+                    </div>
+                {% endfor %}
+              </div>
+
+          </div>
+      </div>
+      {% if is_paginated %}
+        <div class="row pt-5">
+            <div class="col-12 d-flex justify-content-center">
+                <ul class="pagination justify-content-end">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+                    {% endif %}
+                    {% for i in paginator.page_range %}
+                        {% if page_obj.number == i %}
+                            <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Proxima</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">Proxima</span></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+  </div>
+  {% endblock content %}
+
+  {% block extra_js %}
+  <script>
+    $('.btn-newcompany').click(function(e){
+        e.preventDefault();
+        $('#modal-newcompany').modal('show');
+    });
+  </script>
+
+
+  <script>
+        function ListClients(dados) {
+            $.each(dados, function( data ) {
+                $("#companys").append(`
+                    <div class="row border-bottom pt-3">
+                        <div class="col-9">
+                            <p class="p-0">${data['company']}</p>
+                        </div>
+                        <div class="col-1">
+                            <div class="text-center text-light rounded-pill bg-success">
+                                ${data['active']}
+                            </div>
+                        </div>
+                        <div class="col-2 d-flex justify-content-end pb-2">
+                            <button type="button" class="btn btn-round-blue"><img src="{% static 'front/images/edit.svg' %}" width="24px" height="24px"/>Editar</button>
+                        </div>
+                    </div>
+                `);
+            });
+
+        }
+
+      $('.btn-sendnewclient').click(function() {
+        $.ajax({
+            url: '{% url "clientes:add-client" %}',
+            data: {
+                'company': $('#company').val(),
+                'active': $('#active').val(),
+            },
+            dataType: 'json',
+            success: function (data) {
+                ListClients(formdata);
+            }
+        })
+
+      })
+
+  </script>
+  {% endblock extra_js %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" integrity="sha256-FdatTf20PQr/rWg+cAKfl6j4/IY3oohFAJ7gVC3M34E=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css"> <!-- for live demo page -->
+{% endblock %}
+
+  {% block content %}
+    <div class="row mt-4 mb-4 ">
+
+        <div class="col-md-10 offset-1 d-block justify-content-center">
+        <div class="row m-5">
+                <div class="col-md-12 border shadow m-5 p-5">
+                    <h3 class="text-center">Deseja apagar a empresa "{{ object.company_name }}" ?</h3>
+                    <form method="post" action="">
+                        {% csrf_token %}
+                        <br>
+                        <div class="row">
+                            <div class="col-4 offset-2">
+                                <a class="btn btn-danger mr-2" href="{% url 'home:index' %}">
+                                    Cancelar
+                                </a>
+                            </div>
+                            <div class="col-4 d-flex justify-content-end">
+                                <button type="submit" value="" class="btn btn-primary justify-content-end" >
+                                    Apagar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+  {% endblock content %}
+
+  {% block extra_js %}
+
+  {% endblock extra_js %}

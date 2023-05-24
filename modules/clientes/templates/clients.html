@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" integrity="sha256-FdatTf20PQr/rWg+cAKfl6j4/IY3oohFAJ7gVC3M34E=" crossorigin="anonymous">
+{% endblock %}
+
+  {% block content %}
+
+  <div class="container">
+    {% include 'includes/add-filial.html' %}
+    <form action="{% url 'home:update-client' company_pk %}" method="POST">
+    {% csrf_token %}
+      <div class="row pt-5">
+          <div class="col-3 text-secondary">
+              <p class="h4"><strong>Dados Cadastrais</strong></p>
+              <p class="h5">
+                  Informações cadastrais da empresa cliente.
+              </p>
+          </div>
+          <div class="col-8 offset-1 rounded shadow p-3">
+              <div class="container">
+                <div class="row my-3">
+                    <div class="col-9">
+                        <div class="form-group">
+                            <label for="{{newcompany_form.active.auto_id}}" >{{form.company_name.label}}</label>
+                            {{form.company_name}}
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label for="{{form.active.auto_id}}" >{{form.active.label}}</label>
+                            {{form.active}}
+                        </div>
+                    </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="row pt-5">
+        <div class="col-3 text-secondary">
+            <p class="h4"><strong>CNPJs</strong></p>
+            <p class="h5">
+                Cadastro de CNPJs relacionaos com a empresa cliente.
+                Arquivos serão associados a um CNPJ durante o upload.
+            </p>
+        </div>
+        <div class="col-8 offset-1 p-3">
+            <div class="row rounded shadow ">
+                <div class="col-12">
+                    <div class="container">
+                        <div class="row py-3 bg-light">
+                            <div class="col-12 d-flex justify-content-end">
+                                <button class="btn btn-primary btn-newfilial" type="button">
+                                    <img class="pr-2" src="{% static 'front/images/plus.svg' %}" width="20px" height="20px"/>&nbspNovo
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row" >
+                            <div class="col-12" id="listFilial">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 mt-4">
+                                <p></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row pt-4">
+                <div class="col-6">
+                    <a href="{% url 'home:delete-client' company_pk %}" class="btn btn-outline-danger btn-lg">Excluir</a>
+                </div>
+                <div class="col-6 d-flex justify-content-end">
+                    <button class="btn btn-primary btn-lg" type="submit">Salvar</button>
+                </div>
+            </div>
+        </div>
+        </div>
+    </form>
+  </div>
+  {% endblock content %}
+  {% block extra_js %}
+  <script>
+    $('.btn-newfilial').click(function(e){
+        e.preventDefault();
+        $('#modal-newfilial').modal('show');
+        $("#btn-filialedit").addClass('d-none')
+        $("#btn-filialadd").removeClass('d-none')
+    });
+
+    $('.cnpj-mask').mask('00.000.000/0000-00', {reverse: true, autoUnmask: true,});
+  </script>
+
+  <script>
+      $(window).on('load', function(){
+            $.get("{% url 'clientes:list-filial' %}?company=" + {{company_pk}} , function(data,status) {
+                $.each(data, function( index, value ) {
+                    $("#listFilial").append(`
+                        <div id="filial-${value.id}" class="row px-0 border-bottom pt-3">
+                            <div class="col-3">
+                                <p class="p-0 cnpj-mask">${value.cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5")}</p>
+                            </div>
+                            <div class="col-5">
+                                <p class="p-0">${value.filial_name}</p>
+                            </div>
+                            <div class="col-2">
+                                <div class="text-center text-light rounded-pill ${(value.active === true ? 'bg-success' : 'bg-secondary')}">
+                                    ${(value.active === true ? 'Ativo' : 'Inativo')}
+                                </div>
+                            </div>
+                            <div class="col-2 d-flex justify-content-end pb-2">
+                                <button data-title='Editar CNPJ' data-id='${value.id}' data-cnpj='${value.cnpj}' data-filial='${value.filial_name}' data-active='${value.active}' type="button" class="btn btn-round-blue btn-editfilial"><img src="{% static 'front/images/edit.svg' %}" width="27px" height="27px"/>Editar</button>
+                            </div>
+                        </div>
+                    `);
+            });
+            })
+      });
+  </script>
+
+  <script>
+      $('.btn-sendFilialForm').click(function(e) {
+        e.preventDefault();
+        var cnpjmask = $('#id_cnpj').val();
+        $('#id_cnpj').unmask();
+        var cnpj = $('#id_cnpj').val();
+        var active = $('#id_active').val();
+        var filial_name = $('#id_filial_name').val();
+        var company = $('#id_company').val()
+        $.ajax({
+            url: '{% url "clientes:add-filial" %}',
+            headers: {"X-CSRFToken": '{{ csrf_token }}'},
+            method: 'POST',
+            data: {
+                'company': company,
+                'cnpj': cnpj,
+                'active': active,
+                'filial_name': filial_name
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('#modal-newfilial').modal('hide');
+                $("#listFilial").append(`
+                        <div id="filial" class="row border-bottom pt-3">
+                            <div class="col-4">
+                                <p class="p-0">${cnpjmask}</p>
+                            </div>
+                            <div class="col-5">
+                                <p class="p-0">${filial_name}</p>
+                            </div>
+                            <div class="col-1">
+                                <div class="text-center text-light rounded-pill ${(active === 'True' ? 'bg-success' : 'bg-secondary')}">
+                                    ${(active === 'True' ? 'Ativo' : 'Inativo')}
+                                </div>
+                            </div>
+                            <div class="col-2 d-flex justify-content-end pb-2">
+                                <button data-id='${data.pk}' data-cnpj='${cnpj}' data-filial='${filial_name}' data-active='${active}' type="button" class="btn btn-round-blue btn-editfilial"><img src="{% static 'front/images/edit.svg' %}" width="24px" height="24px"/>Editar</button>
+                            </div>
+                        </div>
+                    `);
+            }
+        })
+
+      })
+
+  </script>
+
+    <script>
+        $( "#listFilial" ).on("click", function(e) {
+            $('#modal-newfilial').modal('show');
+            $('#addFilial').each (function(){
+                this.reset();
+            });
+            $("#addFilial").trigger( "reset" );
+            $("#btn-filialedit").removeClass('d-none')
+            $("#btn-filialadd").addClass('d-none')
+            $('#id_filial').val($(e.target).data('id'));
+            $('#id_cnpj').val($(e.target).data('cnpj'));
+            $('#id_filial_name').val($(e.target).data('filial'));
+            console.log()
+            if ($(e.target).data('active') === false) {
+                $("#id_active option[value='False']").attr("selected", "selected");
+            } else {
+                $("#id_active option[value='True']").attr("selected", "selected");
+            }
+        });
+    </script>
+
+    <script>
+        $('.btn-editFilialForm').click(function(e) {
+            
+            e.preventDefault();
+            var cnpjmask = $('#id_cnpj').val();
+            $('#id_cnpj').unmask();
+            var filial = $('#id_filial').val();
+            var cnpj = $('#id_cnpj').val();
+            var active = $('#id_active').val();
+            var filial_name = $('#id_filial_name').val();
+            var company = $('#id_company').val()
+            $.ajax({
+                url: '{% url "clientes:update-filial" %}',
+                headers: {"X-CSRFToken": '{{ csrf_token }}'},
+                method: 'POST',
+                data: {
+                    'filial': filial,
+                    'company': company,
+                    'cnpj': cnpj,
+                    'active': active,
+                    'filial_name': filial_name
+                },
+                dataType: 'json',
+                success: function (data) {
+                    location.reload();
+                }
+            })
+        })
+
+    </script>
+
+  {% endblock extra_js %}

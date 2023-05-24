@@ -1,0 +1,30 @@
+.navbar {
+    background-color: #74C15D!important;
+    color: white!important;
+    height: 100px;
+}
+
+.navbar-brand {
+    color: white!important;
+    font-size: 2rem!important;
+}
+
+nav .navbar-nav li a{
+    color: white !important;
+}
+
+.btn-round-blue {
+    color: #406D93 !important;
+    background-color: #FFF !important;
+    border-color: #406D93 !important;
+}
+
+form label {
+    font-weight: bold!important;
+}
+
+.clearfix::after{
+    display:block;
+    clear:both;
+    content:"";
+}

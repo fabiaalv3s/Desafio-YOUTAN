@@ -1,0 +1,56 @@
+<div class="modal" tabindex="-1" id="modal-editfilial">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Editando CNPJ</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+        <form id="addFilial">
+          {% csrf_token %}
+          {{newfilial.company}}
+          <div class="row py-3">
+              <div class="col-12">
+                  <div class="form-group editfilial">
+                      <label for="{{newfilial.active.auto_id}}" >{{newfilial.active.label}}</label>
+                      {{newfilial.active}}
+                  </div>
+              </div>
+          </div>
+          <div class="row py-3">
+            <div class="col-12">
+                <div class="form-group editfilial">
+                    <label for="{{newfilial.cnpj.auto_id}}" >{{newfilial.cnpj.label}}</label>
+                    {{newfilial.cnpj}}
+                </div>
+            </div>
+        </div>
+          <div class="row py-3">
+              <div class="col-12">
+                  <div class="form-group editfilial">
+                      <label for="{{newfilial.filial_name.auto_id}}" >{{newfilial.filial_name.label}}</label>
+                      {{newfilial.filial_name}}
+                  </div>
+              </div>
+          </div>
+          <div class="row pt-3">
+            <div class="col-6">
+              <button id="bt-reset" class="btn btn-danger" type="reset">Limpar</button>
+            </div>
+            <div class="col-6 d-flex justify-content-end">
+              <button class="btn btn-primary" type="button">Salvar</button>
+            </div>
+          </div>
+        </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        {% comment %} <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> {% endcomment %}
+        {% comment %} <button type="button" class="btn btn-primary">Save changes</button> {% endcomment %}
+      </div>
+    </div>
+  </div>
+</div>
