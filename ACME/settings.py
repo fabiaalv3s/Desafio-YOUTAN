@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'modules.home',
     'modules.clientes',
     'tools.general',
-    # 'users',
 ]
 
 MIDDLEWARE = [

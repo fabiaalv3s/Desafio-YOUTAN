@@ -52,10 +52,14 @@
           </form>
           </div>
         </div>
-        <div class="modal-footer">
-          {% comment %} <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> {% endcomment %}
-          {% comment %} <button type="button" class="btn btn-primary">Save changes</button> {% endcomment %}
-        </div>
+
       </div>
     </div>
+    <script>
+      $(document).ready(function() {
+        $('#modal-newfilial').on('click', '.close', function() {
+          $('#modal-newfilial').modal('hide');
+        });
+      });
+    </script>
   </div>

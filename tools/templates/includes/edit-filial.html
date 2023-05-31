@@ -9,7 +9,7 @@
       </div>
       <div class="modal-body">
         <div class="container-fluid">
-        <form id="addFilial">
+        <form id="editFilial">
           {% csrf_token %}
           {{newfilial.company}}
           <div class="row py-3">
@@ -47,10 +47,13 @@
         </form>
         </div>
       </div>
-      <div class="modal-footer">
-        {% comment %} <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> {% endcomment %}
-        {% comment %} <button type="button" class="btn btn-primary">Save changes</button> {% endcomment %}
-      </div>
     </div>
   </div>
+  <script>
+    $(document).ready(function() {
+      $('#modal-editfilial').on('click', '.close', function() {
+        $('#modal-editfilial').modal('hide');
+      });
+    });
+  </script>
 </div>

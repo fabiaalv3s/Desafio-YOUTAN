@@ -9,6 +9,7 @@
 
   <div class="container">
     {% include 'includes/add-filial.html' %}
+    {% include 'includes/edit-filial.html' %}
     <form action="{% url 'home:update-client' company_pk %}" method="POST">
     {% csrf_token %}
       <div class="row pt-5">
@@ -169,7 +170,7 @@
   </script>
 
     <script>
-        $( "#listFilial" ).on("click", function(e) {
+        $(document).on('click', '.btn-editfilial', function (e) {
             $('#modal-newfilial').modal('show');
             $('#addFilial').each (function(){
                 this.reset();
@@ -180,7 +181,6 @@
             $('#id_filial').val($(e.target).data('id'));
             $('#id_cnpj').val($(e.target).data('cnpj'));
             $('#id_filial_name').val($(e.target).data('filial'));
-            console.log()
             if ($(e.target).data('active') === false) {
                 $("#id_active option[value='False']").attr("selected", "selected");
             } else {
